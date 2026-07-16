@@ -1,0 +1,39 @@
+<div id="playerUploadSection">
+  <h3>🚀 Submit a membership request and add your numbers</h3>
+
+  <div class="form-grid">
+    <div class="row two">
+      <input [(ngModel)]="name" placeholder="👤 full name" />
+      <input [(ngModel)]="team" placeholder="🏟 current team" />
+    </div>
+
+   <div class="row three">
+  <!-- تم إضافة خاصية name لكل حقل هنا -->
+  <input type="number" name="goals" [(ngModel)]="goals" placeholder="goals" />
+  <input type="number" name="assists" [(ngModel)]="assists" placeholder="Assists" />
+  <input type="number" name="matches" [(ngModel)]="matches" placeholder="matches" />
+</div>
+
+
+    <select [(ngModel)]="position">
+      <option value="" disabled selected>choose your position</option>
+      <option value="ST">ST </option>
+      <option value="CM">CM </option>
+      <option value="CB">CB</option>
+      <option value="GK">GK </option>
+      <option value="RB">RB </option>
+    </select>
+
+    <input type="file" accept="image/*" (change)="onFileSelected($event)" />
+
+    <input [(ngModel)]="video" placeholder="🎥 link video your skils(YouTube)" />
+
+    @if (message()) {
+      <p class="msg" [class.error]="isError()">{{ message() }}</p>
+    }
+
+    <button (click)="submit()" [disabled]="loading()">
+      {{ loading() ? '... Sending' : ' Sending file to admin' }}
+    </button>
+  </div>
+</div>

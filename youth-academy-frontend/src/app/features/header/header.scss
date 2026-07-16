@@ -1,0 +1,47 @@
+#logoutBtn {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: black;
+  border: 1px solid var(--red);
+  padding: 8px 12px;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  z-index: 50;
+}
+
+header {
+  background: linear-gradient(90deg, var(--red-dark), var(--red));
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  button,
+  select {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    background: #111;
+    color: #fff;
+
+    &:hover {
+      background: #222;
+    }
+  }
+
+  .admin-btn {
+    background: orange;
+    color: #000;
+  }
+
+  select {
+    background: #111;
+    border: 1px solid #333;
+  }
+}

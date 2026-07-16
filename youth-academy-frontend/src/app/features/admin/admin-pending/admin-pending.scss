@@ -1,0 +1,112 @@
+#adminPending {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 0 15px;
+}
+
+.top-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+
+  h2 {
+    color: var(--red);
+    margin: 0;
+  }
+}
+
+.back-btn {
+  background: #111;
+  border: 1px solid var(--red);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+
+  &:hover {
+    background: #222;
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.request-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--panel);
+  border: 1px solid var(--border-red);
+  border-radius: 10px;
+  padding: 12px;
+
+  img {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #111;
+    flex-shrink: 0;
+  }
+
+  .details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    color: var(--text-dim);
+    font-size: 13px;
+
+    b {
+      color: #fff;
+      font-size: 16px;
+    }
+  }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+
+    button {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      white-space: nowrap;
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: default;
+      }
+    }
+
+    .approve-btn {
+      background: var(--good);
+      color: #fff;
+    }
+
+    .reject-btn {
+      background: var(--bad);
+      color: #fff;
+    }
+  }
+
+  @media (max-width: 560px) {
+    flex-wrap: wrap;
+  }
+}
+
+.status-msg {
+  text-align: center;
+  color: var(--text-dim);
+  padding: 30px;
+
+  &.error {
+    color: #ff6b6b;
+  }
+}

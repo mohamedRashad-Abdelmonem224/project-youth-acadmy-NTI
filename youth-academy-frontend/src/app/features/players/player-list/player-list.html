@@ -1,0 +1,19 @@
+@if (auth.isPlayer()) {
+  <app-player-submit (submitted)="fetchPlayers()" />
+}
+
+<h2 id="sectionTitle">{{ sectionTitle() }}</h2>
+
+@if (loading()) {
+  <p class="status-msg">Loading players...</p>
+} @else if (errorMsg()) {
+  <p class="status-msg error">{{ errorMsg() }}</p>
+} @else if (visiblePlayers().length === 0) {
+  <p class="status-msg"> no players to display at the moment.</p>
+} @else {
+  <div class="grid">
+    @for (player of visiblePlayers(); track player._id) {
+      <app-player-card [player]="player" />
+    }
+  </div>
+}

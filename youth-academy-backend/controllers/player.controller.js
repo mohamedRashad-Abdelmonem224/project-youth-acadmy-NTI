@@ -2,7 +2,6 @@
 const path = require("path");
 const Player = require("../models/player.model");
 
-
 const deletePlayerFile = async (filename) => {
   if (!filename) return;
   try {
@@ -13,15 +12,24 @@ const deletePlayerFile = async (filename) => {
   }
 };
 
-// Get all players
+// 1. جلب كل اللاعبين (مع تعديل البيانات لتناسب الأنجلر فوراً)
 const getPlayers = async (req, res) => {
   try {
-    const players = await Player.find({ status: "approved" });
+    const players = await Player.find({ status: "approved" }).lean(); // استخدام lean لسرعة التعديل
+
+    // تحويل البيانات ليتوقعها الأنجلر كحقول مسطحة
+    const formattedPlayers = players.map(player => ({
+      ...player,
+      goals: player.stats?.goals || 0,
+      assists: player.stats?.assists || 0,
+      matches: player.stats?.matches || 0,
+      imageUrl: player.img || "" // حل مشكلة روابط الصور هنا للأبد
+    }));
 
     res.status(200).json({
       status: "success",
-      count: players.length,
-      data: { players },
+      count: formattedPlayers.length,
+      data: { players: formattedPlayers },
     });
   } catch (error) {
     res.status(400).json({
@@ -31,20 +39,28 @@ const getPlayers = async (req, res) => {
   }
 };
 
-// Create player
+// 2. إضافة لاعب جديد
 const createPlayer = async (req, res) => {
   try {
     if (req.fileValidationError) {
       return res.status(400).json({ status: "error", message: req.fileValidationError });
     }
 
-    // امنع العميل يتحكم في الحالة أو صاحب الطلب بنفسه
-    const { status, submittedBy, ...safeBody } = req.body;
+    const { status, submittedBy, goals, assists, matches, injuries, video, ...safeBody } = req.body;
 
     const playerData = {
       ...safeBody,
+      video: video || "", // حفظ رابط الفيديو المبعوث من الأنجلر
       status: "pending",
-      submittedBy: req.user._id, // جاي من authenticateMiddleware
+      submittedBy: req.user._id,
+    };
+
+    // وضع الأرقام داخل stats المتوافق مع الـ Schema
+    playerData.stats = {
+      goals: Number(goals) || 0,
+      assists: Number(assists) || 0,
+      matches: Number(matches) || 0,
+      injuries: Number(injuries) || 0,
     };
 
     if (req.file) {
@@ -59,58 +75,61 @@ const createPlayer = async (req, res) => {
   }
 };
 
-
-// Get player by ID
+// 3. جلب لاعب محدد بالـ ID
 const getPlayerById = async (req, res) => {
   try {
-    const player = await Player.findById(req.params.id);
+    const player = await Player.findById(req.params.id).lean();
 
     if (!player) {
-      return res.status(404).json({
-        status: "fail",
-        message: "Player not found",
-      });
+      return res.status(404).json({ status: "fail", message: "Player not found" });
     }
+
+    // تسوية الحقول للاعب المنفرد ليفهمها الأنجلر
+    const formattedPlayer = {
+      ...player,
+      goals: player.stats?.goals || 0,
+      assists: player.stats?.assists || 0,
+      matches: player.stats?.matches || 0,
+      imageUrl: player.img || ""
+    };
 
     res.status(200).json({
       status: "success",
-      data: { player },
+      data: { player: formattedPlayer },
     });
   } catch (error) {
-    res.status(400).json({
-      status: "error",
-      message: error.message,
-    });
+    res.status(400).json({ status: "error", message: error.message });
   }
 };
 
-// Update player
-
+// 4. تعديل بيانات اللاعب
 const updatePlayer = async (req, res) => {
   try {
     if (req.fileValidationError) {
-      return res.status(400).json({
-        status: "error",
-        message: req.fileValidationError,
-      });
+      return res.status(400).json({ status: "error", message: req.fileValidationError });
     }
 
     const player = await Player.findById(req.params.id);
-
     if (!player) {
-      return res.status(404).json({
-        status: "fail",
-        message: "Player not found",
-      });
+      return res.status(404).json({ status: "fail", message: "Player not found" });
     }
 
-    // ⚠️ تعديل أمني: منع العميل من تعديل الحالة أو صاحب الحساب أثناء التحديث
-    const { status, submittedBy, ...safeBody } = req.body;
+    const { status, submittedBy, goals, assists, matches, injuries, video, ...safeBody } = req.body;
     const updateData = { ...safeBody };
+
+    if (video !== undefined) updateData.video = video;
+
+    if (goals != null || assists != null || matches != null || injuries != null) {
+      updateData.stats = {
+        goals: goals != null ? Number(goals) : (player.stats?.goals || 0),
+        assists: assists != null ? Number(assists) : (player.stats?.assists || 0),
+        matches: matches != null ? Number(matches) : (player.stats?.matches || 0),
+        injuries: injuries != null ? Number(injuries) : (player.stats?.injuries || 0),
+      };
+    }
 
     if (req.file) {
       updateData.img = `/uploads/player/${req.file.filename}`;
-    
       if (player.img) {
         const oldFilename = path.basename(player.img);
         await deletePlayerFile(oldFilename);
@@ -126,27 +145,17 @@ const updatePlayer = async (req, res) => {
       data: { player: updatedPlayer },
     });
   } catch (error) {
-    if (req.file) {
-      await deletePlayerFile(req.file.filename);
-    }
-    res.status(400).json({
-      status: "error",
-      message: error.message,
-    });
+    if (req.file) await deletePlayerFile(req.file.filename);
+    res.status(400).json({ status: "error", message: error.message });
   }
 };
 
-
-// Delete player
+// 5. حذف لاعب
 const deletePlayer = async (req, res) => {
   try {
     const deletedPlayer = await Player.findByIdAndDelete(req.params.id);
-
     if (!deletedPlayer) {
-      return res.status(404).json({
-        status: "fail",
-        message: "Player not found",
-      });
+      return res.status(404).json({ status: "fail", message: "Player not found" });
     }
 
     if (deletedPlayer.img) {
@@ -160,10 +169,7 @@ const deletePlayer = async (req, res) => {
       data: { player: deletedPlayer },
     });
   } catch (error) {
-    res.status(400).json({
-      status: "error",
-      message: error.message,
-    });
+    res.status(400).json({ status: "error", message: error.message });
   }
 };
 

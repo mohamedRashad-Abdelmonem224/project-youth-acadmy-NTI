@@ -1,0 +1,43 @@
+<div id="adminPending">
+  <div class="top-row">
+    <a routerLink="/" class="back-btn">⬅back</a>
+    <h2>Reviewing membership applications</h2>
+  </div>
+
+  @if (loading()) {
+    <p class="status-msg">loading...</p>
+  } @else if (errorMsg()) {
+    <p class="status-msg error">{{ errorMsg() }}</p>
+  } @else if (requests().length === 0) {
+    <p class="status-msg"> no pending orders at moment.</p>
+  } @else {
+    <div class="list">
+      @for (p of requests(); track p._id) {
+        <div class="request-card">
+          <img [src]="imgUrl(p)" [alt]="p.name" />
+          <div class="details">
+            <b>{{ p.name }}</b>
+            <span>🏟 {{ p.team || '—' }} | 🏷 {{ p.position }}</span>
+            <span>⚽ {{ p.stats.goals }} goals| 🎯 {{ p.stats.assists }} Assists| 🏟 {{ p.stats.matches }} matches</span>
+          </div>
+          <div class="actions">
+            <button
+              class="approve-btn"
+              [disabled]="busyId() === p._id"
+              (click)="approve(p._id)"
+            >
+              approved
+            </button>
+            <button
+              class="reject-btn"
+              [disabled]="busyId() === p._id"
+              (click)="reject(p._id)"
+            >
+              Rejected
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

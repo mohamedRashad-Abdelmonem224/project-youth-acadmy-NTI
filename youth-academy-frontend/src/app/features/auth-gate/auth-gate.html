@@ -1,0 +1,83 @@
+<div id="auth">
+  <div id="authBox">
+    <h1>Egypt Young Talents Platform</h1>
+    <p class="tagline">A Web Platform for Discovering Football Talents</p>
+
+    <div class="tabs">
+      <button
+        type="button"
+        [class.active]="mode() === 'login'"
+        (click)="switchMode('login')"
+      >
+        Login
+      </button>
+      <button
+        type="button"
+        [class.active]="mode() === 'register'"
+        (click)="switchMode('register')"
+      >
+        Sign Up
+      </button>
+    </div>
+
+    @if (mode() === 'login') {
+      <form (ngSubmit)="submitLogin()">
+        <!-- تم تعديل هذا الحقل ليستقبل Username بدلاً من Email -->
+        <input
+          type="text"
+          name="loginUsername"
+          [(ngModel)]="loginUsername"
+          placeholder="Username"
+          autocomplete="username"
+        />
+        <input
+          type="password"
+          name="loginPassword"
+          [(ngModel)]="loginPassword"
+          placeholder="Password"
+          autocomplete="current-password"
+        />
+
+        @if (errorMsg()) {
+          <p class="error">{{ errorMsg() }}</p>
+        }
+
+        <button type="submit" class="primary" [disabled]="loading()">
+          {{ loading() ? 'Logging in...' : 'Login' }}
+        </button>
+      </form>
+    } @else {
+      <form (ngSubmit)="submitRegister()">
+        <input name="regName" [(ngModel)]="regName" placeholder="Full Name" />
+        <input name="regUsername" [(ngModel)]="regUsername" placeholder="Username" />
+        <input
+          type="email"
+          name="regEmail"
+          [(ngModel)]="regEmail"
+          placeholder="Email Address"
+        />
+        <input
+          type="password"
+          name="regPassword"
+          [(ngModel)]="regPassword"
+          placeholder="Password"
+        />
+        <select name="regRole" [(ngModel)]="regRole">
+          <option value="coach">Coach</option>
+          <option value="scout">Scout</option>
+          <option value="player">Player</option>
+          <option value="viewer">Viewer</option>
+          <option value="admin">Admin</option>
+        </select>
+
+        @if (errorMsg()) {
+          <p class="error">{{ errorMsg() }}</p>
+        }
+
+        <button type="submit" class="primary" [disabled]="loading()">
+          {{ loading() ? 'Signing up...' : 'Sign Up' }}
+        </button>
+      </form>
+    }
+  </div>
+</div>

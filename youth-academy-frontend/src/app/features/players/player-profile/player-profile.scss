@@ -1,0 +1,108 @@
+#profile {
+  padding: 20px;
+  text-align: center;
+}
+
+.back-btn {
+  background: #111;
+  border: 1px solid var(--red);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 10px;
+
+  &:hover {
+    background: #222;
+  }
+}
+
+.box {
+  max-width: 900px;
+  margin: auto;
+  background: var(--panel);
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px solid var(--red);
+}
+
+img {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin: 10px;
+  background: #111;
+}
+
+.stats-line {
+  color: var(--text-dim);
+  line-height: 1.8;
+}
+
+.admin-controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 14px 0;
+
+  button {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  .approve-btn {
+    background: var(--good);
+    color: #fff;
+  }
+
+  .delete-btn {
+    background: var(--bad);
+    color: #fff;
+  }
+}
+
+canvas {
+  max-height: 300px;
+  margin-top: 10px;
+}
+
+iframe {
+  width: 100%;
+  height: 400px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 10px;
+}
+
+.dev-analysis {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px dashed var(--border-red);
+  text-align: center;
+
+  h3 {
+    color: var(--red);
+    margin-bottom: 10px;
+  }
+
+  .dev-summary {
+    color: var(--text-dim);
+    max-width: 560px;
+    margin: 12px auto;
+    line-height: 1.7;
+  }
+}
+
+.status-msg {
+  text-align: center;
+  color: var(--text-dim);
+  padding: 30px;
+
+  &.error {
+    color: #ff6b6b;
+  }
+}

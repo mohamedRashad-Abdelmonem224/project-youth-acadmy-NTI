@@ -1,0 +1,11 @@
+<a class="card" 
+   [routerLink]="['/players', player._id]" 
+   [style.backgroundImage]="player.img?.startsWith('http') ? 'url(' + player.img + ')' : 'url(' + imgUrl + ')'">
+  <div class="info">
+    <b>{{ player.name }}</b><br />
+    Stadium team: {{ player.team }}<br />
+    position: {{ player.position }}<br />
+    ⭐ rating: {{ latestRating }}<br />
+    <span class="badge" [ngClass]="tier.cssClass">{{ tier.label }}</span>
+  </div>
+</a>

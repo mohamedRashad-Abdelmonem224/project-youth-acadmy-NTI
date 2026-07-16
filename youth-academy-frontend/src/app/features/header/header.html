@@ -1,0 +1,21 @@
+@if (auth.isLoggedIn()) {
+  <button id="logoutBtn" (click)="logout()">Logout ({{ auth.user()?.username }})</button>
+
+  <header>
+    <button (click)="goTop10()">TOP 10#</button>
+    <button (click)="goAll()">All Players</button>
+
+    @if (auth.isAdmin()) {
+      <button class="admin-btn" routerLink="/admin/pending">Order review ⚙</button>
+    }
+
+    <select [(ngModel)]="position" (ngModelChange)="onFilterChange()">
+      <option value="all">All Positions</option>
+      <option value="ST">ST</option>
+      <option value="CM">CM</option>
+      <option value="CB">CB</option>
+      <option value="GK">GK</option>
+      <option value="RB">RB</option>
+    </select>
+  </header>
+}

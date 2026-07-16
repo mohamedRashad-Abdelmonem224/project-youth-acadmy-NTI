@@ -1,0 +1,36 @@
+.card {
+  display: block; /* للحفاظ على البنية الأساسية */
+  height: 260px;
+  
+  /* تم إضافة !important هنا لإجبار المتصفح على تقديم صورة اللاعب القادمة من الأنجلر على أي لون افتراضي */
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  
+  /* جعل اللون الأسود كـ خلفية احتياطية فقط في حال لم يملك اللاعب صورة */
+  background: #151515; 
+  
+  border: 2px solid var(--red);
+  border-radius: 10px;
+  
+  /* الـ flex هنا ممتاز عشان يخلي الـ info تنزل تحت */
+  display: flex;
+  align-items: flex-end;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+  }
+}
+
+.info {
+  background: rgba(0, 0, 0, 0.7);
+  padding: 8px;
+  width: 100%;
+  font-size: 12px;
+  border-radius: 0 0 8px 8px;
+  box-sizing: border-box; /* مهمة جداً مع الـ flex عشان الـ padding مايطلعش الـ info بره الكارت */
+}

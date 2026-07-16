@@ -1,0 +1,6 @@
+@if (!auth.isLoggedIn()) {
+  <app-auth-gate />
+} @else {
+  <app-header />
+  <router-outlet />
+}

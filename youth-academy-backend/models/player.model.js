@@ -32,7 +32,7 @@ const playerSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       default: null,
-    },
+    },// حطه في أي مكان جوه الـ playerSchema (مثلاً تحت حقل الـ status)
   },
   { timestamps: true }
 );
