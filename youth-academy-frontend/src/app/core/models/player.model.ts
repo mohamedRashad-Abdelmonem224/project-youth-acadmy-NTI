@@ -16,7 +16,7 @@ export interface Player {
   img: string;
   video: string;
   stats: PlayerStats;
-  rating: number[]; // 5 seasons of ratings, oldest -> newest
+  rating: number[]; 
   status: PlayerStatus;
   submittedBy?: string | null;
   createdAt?: string;
@@ -34,8 +34,6 @@ export interface PlayerResponse {
   data: { player: Player };
 }
 
-// ملاحظة: كنترولر الأدمن (admin-controller.js) بيرجّع شكل استجابة مختلف
-// عن كنترولر اللاعبين العادي (بدون تغليف داخل data)
 export interface AdminPendingResponse {
   status: string;
   count: number;
