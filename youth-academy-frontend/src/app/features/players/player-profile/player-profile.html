@@ -7,12 +7,12 @@
     <p class="status-msg error">{{ errorMsg() }}</p>
   } @else if (player(); as p) {
     <div class="box">
-      <!-- استخدام imgUrl لعرض الصورة بشكل سليم -->
+      
       <img [src]="imgUrl" [alt]="p.name" />
       <h2>{{ p.name }}</h2>
       <p class="stats-line">
         🏟 current team: {{ p.team }} | 🏷 position: {{ p.position }}<br />
-        <!-- استخدام $any رجّع الكود الأصلي بتاعك شغال 100% ومنع الـ Compiler يضرب -->
+    
         ⚽ goals: {{ $any(p).goals ?? p.stats?.goals ?? 0 }} | 🎯 assists: {{ $any(p).assists ?? p.stats?.assists ?? 0 }}<br />
         🏟 {{ $any(p).matches ?? p.stats?.matches ?? 0 }} matches | 🤖 {{ tier?.label }}
       </p>
@@ -28,7 +28,7 @@
 
       <canvas #ratingChart></canvas>
 
-      <!-- التعديل الصحيح لعرض الفيديو باستخدام المتغير المحلي p والدالة المؤمنة -->
+      
       @if (p.video) {
         <iframe
           [src]="videoUrl"
