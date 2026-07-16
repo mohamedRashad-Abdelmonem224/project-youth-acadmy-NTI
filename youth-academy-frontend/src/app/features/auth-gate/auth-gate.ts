@@ -17,7 +17,7 @@ export class AuthGate {
   loading = signal(false);
   errorMsg = signal('');
 
-  // login model (تم تعديل اسم المتغير هنا ليصبح متناسقاً)
+  // login model
   loginUsername = '';
   loginPassword = '';
 
@@ -36,7 +36,7 @@ export class AuthGate {
   }
 
   submitLogin() {
-    // التحقق من إدخال اسم المستخدم وكلمة المرور
+  
     if (!this.loginUsername || !this.loginPassword) {
       this.errorMsg.set('Please enter your username and password');
       return;
@@ -46,8 +46,8 @@ export class AuthGate {
     
     this.auth
       .login({ 
-        // تمرير متغير اليوزر الجديد مكان خانة الإدخال لضمان عدم حدوث خطأ في الموديل
-        email: this.loginUsername, 
+       
+        username: this.loginUsername, 
         password: this.loginPassword 
       })
       .subscribe({
