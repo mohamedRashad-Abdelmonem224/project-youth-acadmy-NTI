@@ -11,7 +11,7 @@ const USER_KEY = 'ya_user';
 export class AuthService {
   private readonly baseUrl = `${environment.apiUrl}/auth`;
 
-  // الحالة كـ signals عشان تستخدم بسهولة في كل التطبيق
+  
   private readonly _user = signal<User | null>(this.readStoredUser());
   private readonly _token = signal<string | null>(localStorage.getItem(TOKEN_KEY));
 
