@@ -1,4 +1,4 @@
-﻿﻿const fs = require("fs").promises;
+const fs = require("fs").promises;
 const path = require("path");
 const Player = require("../models/player.model");
 
@@ -12,18 +12,18 @@ const deletePlayerFile = async (filename) => {
   }
 };
 
-// 1. جلب كل اللاعبين (مع تعديل البيانات لتناسب الأنجلر فوراً)
+
 const getPlayers = async (req, res) => {
   try {
-    const players = await Player.find({ status: "approved" }).lean(); // استخدام lean لسرعة التعديل
+    const players = await Player.find({ status: "approved" }).lean(); 
 
-    // تحويل البيانات ليتوقعها الأنجلر كحقول مسطحة
+   
     const formattedPlayers = players.map(player => ({
       ...player,
       goals: player.stats?.goals || 0,
       assists: player.stats?.assists || 0,
       matches: player.stats?.matches || 0,
-      imageUrl: player.img || "" // حل مشكلة روابط الصور هنا للأبد
+      imageUrl: player.img || ""       
     }));
 
     res.status(200).json({
@@ -39,7 +39,7 @@ const getPlayers = async (req, res) => {
   }
 };
 
-// 2. إضافة لاعب جديد
+
 const createPlayer = async (req, res) => {
   try {
     if (req.fileValidationError) {
@@ -50,12 +50,12 @@ const createPlayer = async (req, res) => {
 
     const playerData = {
       ...safeBody,
-      video: video || "", // حفظ رابط الفيديو المبعوث من الأنجلر
+      video: video || "", 
       status: "pending",
       submittedBy: req.user._id,
     };
 
-    // وضع الأرقام داخل stats المتوافق مع الـ Schema
+ 
     playerData.stats = {
       goals: Number(goals) || 0,
       assists: Number(assists) || 0,
@@ -75,7 +75,6 @@ const createPlayer = async (req, res) => {
   }
 };
 
-// 3. جلب لاعب محدد بالـ ID
 const getPlayerById = async (req, res) => {
   try {
     const player = await Player.findById(req.params.id).lean();
@@ -84,7 +83,6 @@ const getPlayerById = async (req, res) => {
       return res.status(404).json({ status: "fail", message: "Player not found" });
     }
 
-    // تسوية الحقول للاعب المنفرد ليفهمها الأنجلر
     const formattedPlayer = {
       ...player,
       goals: player.stats?.goals || 0,
@@ -102,7 +100,7 @@ const getPlayerById = async (req, res) => {
   }
 };
 
-// 4. تعديل بيانات اللاعب
+
 const updatePlayer = async (req, res) => {
   try {
     if (req.fileValidationError) {
@@ -150,7 +148,7 @@ const updatePlayer = async (req, res) => {
   }
 };
 
-// 5. حذف لاعب
+
 const deletePlayer = async (req, res) => {
   try {
     const deletedPlayer = await Player.findByIdAndDelete(req.params.id);
