@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       minlength: 6,
-      select: false,
+      select: false, 
     },
     role: {
       type: String,
@@ -34,16 +34,27 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+
 userSchema.pre("save", async function () {
+
   if (!this.isModified("password")) return;
 
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+  } catch (error) {
+    throw error; 
+  }
 });
 
-userSchema.methods.comparePassword = function (candidatePassword) {
-  return bcrypt.compare(candidatePassword, this.password);
+userSchema.methods.comparePassword = async function (candidatePassword) {
+  try {
+    if (!this.password) return false; 
+    return await bcrypt.compare(candidatePassword, this.password);
+  } catch (error) {
+    return false;
+  }
 };
-
 
 module.exports = mongoose.model("User", userSchema);
