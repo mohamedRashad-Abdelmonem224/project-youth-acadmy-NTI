@@ -1,10 +1,14 @@
 const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs"); 
+
 const generateToken = (userId, role) => {
-  return jwt.sign({ id: userId, role: role }, process.env.JWT_SECRET, {
+  const secret = process.env.JWT_SECRET || "youth_academy_fallback_secret_key_123456";
+  return jwt.sign({ id: userId, role: role }, secret, {
     expiresIn: "30d",
   });
 };
+
 const register = async (req, res) => {
   try {
     const { name, username, email, password, role } = req.body;
@@ -31,16 +35,16 @@ const register = async (req, res) => {
     res.status(500).json({ message: " error occurred during recording.", error: err.message });
   }
 };
+
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
-
-    const user = await User.findOne({ email }).select("+password");
+   
+    const { username, password } = req.body;
+    const user = await User.findOne({ username }).select("+password");
     if (!user) {
       return res.status(401).json({ message: "The login data is incorrect" });
     }
-
-    const isMatch = await user.comparePassword(password);
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "The login data is incorrect" });
     }
@@ -56,9 +60,11 @@ const login = async (req, res) => {
     res.status(500).json({ message: "error occurred while logging in", error: err.message });
   }
 };
+
 const getMe = async (req, res) => {
   res.status(200).json({ status: "success", user: req.user });
 };
+
 module.exports = {
   register,
   login,
