@@ -39,8 +39,8 @@ export class PlayerService {
     if (form.assists != null) fd.append('assists', String(form.assists));
     if (form.matches != null) fd.append('matches', String(form.matches));
     
-    // 🛠️ تم تعديل اسم الحقل هنا من 'imageUrl' إلى 'img' ليتوافق مع الـ Multer في الباك إند
-    if (form.imageFile) fd.append('img', form.imageFile); 
+   
+    if (form.imageFile) fd.append('imageUrl', form.imageFile); 
     
     return this.http.post<PlayerResponse>(this.baseUrl, fd);
   }
@@ -53,20 +53,18 @@ export class PlayerService {
     return this.http.delete<{ status: string; message: string }>(`${this.baseUrl}/${id}`);
   }
 
-  /** يحول مسار الصورة النسبي القادم من الباك اند (/uploads/...) لرابط كامل */
-  /** يحول مسار الصورة النسبي القادم من الباك اند لرابط كامل مع السيرفر 3500 */
+ 
   resolveImage(path: string | null | undefined): string {
     if (!path) return this.placeholderImage();
     
-    // إذا كانت الصورة رابطاً كاملاً قادماً من الإنترنت (http/https)
+  
     if (path.startsWith('http')) return path;
     
-    // إذا كانت الصورة مخزنة كمسار نسبي، ندمج معها بورت السيرفر الصحيح 3500
+    
     return `http://localhost:3500${path}`;
   }
 
-
-  /** صورة بديلة (SVG محلي) للاعبين اللي لسه ملهمش صورة، بدل الاعتماد على خدمة خارجية */
+ 
   private placeholderImage(): string {
     const svg = `
       <svg xmlns="http://www.w3.org/2000/svg" width="300" height="300">
