@@ -2,6 +2,8 @@ const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs"); 
 
+const SELF_REGISTER_ROLES = ["coach", "scout", "player", "viewer"];
+
 const generateToken = (userId, role) => {
   const secret = process.env.JWT_SECRET || "youth_academy_fallback_secret_key_123456";
   return jwt.sign({ id: userId, role: role }, secret, {
@@ -23,7 +25,16 @@ const register = async (req, res) => {
       return res.status(400).json({ message: "This username is already taken." });
     }
 
-    const user = await User.create({ name, username, email, password, role });
+    const safeRole = SELF_REGISTER_ROLES.includes(role) ? role : "viewer";
+    
+    const user = await User.create({ 
+      name, 
+      username, 
+      email, 
+      password, 
+      role: safeRole 
+    });
+    
     const token = generateToken(user._id, user.role);
 
     res.status(201).json({
@@ -38,7 +49,6 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-   
     const { username, password } = req.body;
     const user = await User.findOne({ username }).select("+password");
     if (!user) {
